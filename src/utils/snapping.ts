@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import type { BlockDefinition } from '../types';
+import { UNIT_SIZE } from '../types';
 
-export function snapToGrid(value: number, gridSize = 1): number {
-  return Math.round(value / gridSize) * gridSize;
+/** Snap to the center of a grid cell (half-unit offset) */
+export function snapToGrid(value: number, gridSize = UNIT_SIZE): number {
+  return Math.floor(value / gridSize) * gridSize + gridSize / 2;
 }
 
 export function getRotatedFootprint(
@@ -68,10 +70,10 @@ export function computePlacementOnFace(
     existingPos[2] + snappedNormal.z * (existingSize[2] / 2 + newSize[2] / 2),
   ];
 
-  // Snap non-normal axes to grid
-  if (Math.abs(snappedNormal.x) < 0.5) offset[0] = snapToGrid(offset[0]);
-  if (Math.abs(snappedNormal.y) < 0.5) offset[1] = snapToGrid(offset[1]);
-  if (Math.abs(snappedNormal.z) < 0.5) offset[2] = snapToGrid(offset[2]);
+  // Snap non-normal axes to grid cell centers
+  if (Math.abs(snappedNormal.x) < 0.5) offset[0] = snapToGrid(offset[0], UNIT_SIZE);
+  if (Math.abs(snappedNormal.y) < 0.5) offset[1] = snapToGrid(offset[1], UNIT_SIZE);
+  if (Math.abs(snappedNormal.z) < 0.5) offset[2] = snapToGrid(offset[2], UNIT_SIZE);
 
   // Don't go underground
   if (offset[1] < newSize[1] / 2) offset[1] = newSize[1] / 2;

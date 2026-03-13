@@ -9,4 +9,11 @@ html, body, #root {
   height: 100%;
   overflow: hidden;
   font-family: system-ui, -apple-system, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: none), (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
 }

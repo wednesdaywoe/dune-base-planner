@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 import type { PlacedBlock, InteractionMode } from '../types';
+import { getBlockDef } from '../data/blockDefinitions';
 
 interface StoreState {
   blocks: PlacedBlock[];
@@ -21,7 +22,7 @@ interface StoreState {
 
 export const useStore = create<StoreState>((set, get) => ({
   blocks: [],
-  selectedBlockType: 'cube',
+  selectedBlockType: 'square_foundation',
   mode: 'place',
   ghostPosition: null,
   ghostRotation: 0,
@@ -54,7 +55,11 @@ export const useStore = create<StoreState>((set, get) => ({
   setGhostPosition: (pos) => set({ ghostPosition: pos }),
 
   rotateGhost: () =>
-    set((s) => ({ ghostRotation: (s.ghostRotation + 90) % 360 })),
+    set((s) => {
+      const def = getBlockDef(s.selectedBlockType);
+      const increment = def.rotationIncrement;
+      return { ghostRotation: (s.ghostRotation + increment) % 360 };
+    }),
 
   clearAll: () => set({ blocks: [] }),
 
